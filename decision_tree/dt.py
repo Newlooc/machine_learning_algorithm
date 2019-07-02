@@ -81,9 +81,21 @@ def createTree(dataSet, labels) :
     if(classList.count(classList[0]) == len(classList)) :
         return classList[0]
     if(len(dataSet[0]) == 1) :
+        return majorityCnt(dataSet)
+    bestFeat = chooseBestFeatureToSplit(dataSet)
+    bestFeatLabel = labels[bestFeat]
+    myTree = {bestFeatLabel : {}}
+    del(labels[bestFeat])
+    featValue = [example[bestFeat] for example in dataSet]
+    uniqueValues = set(featValue)
+    for value in uniqueValues :
+        subLabel = labels[:]
+        myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabel)
+    return myTree
         
 
 dataSet, labels = createDataSet()
 calShannonEnt(dataSet)
 chooseBestFeatureToSplit(dataSet)
-createTree(dataSet, [])
+res = createTree(dataSet, labels)
+print(res)
