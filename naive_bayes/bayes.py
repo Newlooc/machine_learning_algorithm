@@ -46,6 +46,13 @@ def trainNB0(trainMatrix, trainLabel) :
     p1Num = zeros(numWords)
     p0Denom = 0.0
     p1Denom = 0.0
+
+    #初始化为0有问题, 以为在[式2]中很容易出现分母0的情况
+    p0Num = ones(numWords)
+    p1Num = ones(numWords)
+    p0Denom = 2.0
+    p1Denom = 2.0
+
     for i in range(numTrainDocs) :
         #二元分类, 直接用if...else
         if trainLabel[i] == 1 :
@@ -60,6 +67,12 @@ def trainNB0(trainMatrix, trainLabel) :
     #向量[p(w_1|c_i), p(w_2|c_i), ... ,p(w_n|c_i)] [式2-i]
     p0Vect = p0Num / p0Denom
     p1Vect = p1Num / p1Denom
+
+    #因为分母和分子相差悬殊, 由于结果的对比值比较重要, 具体指不重要
+    #所以取对数
+    p0Vect = log(p0Num / p0Denom)
+    p1Vect = log(p1Num / p1Denom)
+
     #p(c1), [式2-0], [式-1]
     return pAbusive, p0Vect, p1Vect
             
