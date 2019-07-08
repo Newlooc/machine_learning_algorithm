@@ -27,7 +27,8 @@ def setOfWords2Vec(vocabList, inputSet) :
     returnVec = [0] * len(vocabList)
     for word in inputSet :
         if word in vocabList :
-            returnVec[vocabList.index(word)] = 1
+            # returnVec[vocabList.index(word)] = 1
+            returnVec[vocabList.index(word)] += 1
     return returnVec
 
 #求贝叶斯公式里的各个分项
