@@ -76,13 +76,36 @@ def trainNB0(trainMatrix, trainLabel) :
     #p(c1), [式2-0], [式-1]
     return pAbusive, p0Vect, p1Vect
             
+#这个地方有问题, 就是免去了计算p(w)的工作, 因为p1和p0都要除以p(w), 所以直接去掉
+#由于p1Vec和pClass1都取了对数, 所以相乘的式子都变了相加和sum
+def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1) :
+    p1 = sum(vec2Classify * p1Vec) + log(pClass1)
+    p0 = sum(vec2Classify * p0Vec) + log(1.0 - pClass1)
+    if p1 > p0 :
+        return 1
+    else :
+        return 0
 
+#testing
+def testingNB() :
+    listOPosts, listClasses = loadDataSet()
+    myVocabList = createVocablist(listOPosts)
+    
+    trainMat = []
+    for postInDoc in listOPosts :
+        trainMat.append(setOfWords2Vec(myVocabList, postInDoc))
+    pAb, p0V, p1V = trainNB0(trainMat, listClasses)
 
-data, label = loadDataSet()
-vocab = createVocablist(data)
-trainMat = []
-for postinDoc in data :
-    trainMat.append(setOfWords2Vec(vocab, postinDoc))
+    #class0 test
+    testEntry = ['love', 'my', 'dalmation']
+    thisDoc = array(setOfWords2Vec(myVocabList, testEntry)) 
+    ret = classifyNB(thisDoc, p0V, p1V, pAb)
+    print(ret)
 
-res = trainNB0(trainMat, label)
-print(res)
+    #class1 test
+    testEntry = ['stupid', 'garbage']
+    thisDoc = array(setOfWords2Vec(myVocabList, testEntry)) 
+    ret = classifyNB(thisDoc, p0V, p1V, pAb)
+    print(ret)
+
+testingNB()
