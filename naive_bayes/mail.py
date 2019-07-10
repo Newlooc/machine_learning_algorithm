@@ -1,14 +1,17 @@
 from numpy import *
 
+#将长字符串解析成数组
 def textParse(bigString) :
     import re
     listOfTokens = re.split(r'\W', bigString)
     return [tok.lower() for tok in listOfTokens if len(tok) > 2]
 
+#测试
 def spamTest() :
     docList = []
     classList = []
     fullText = []
+    #读取文件
     for i in range(1, 26) :
         wordList = textParse(open('email/spam/%d.txt' % i, encoding='utf-8', errors='ignore').read())
         docList.append(wordList)
@@ -18,7 +21,10 @@ def spamTest() :
         docList.append(wordList)
         fullText.extend(wordList)
         classList.append(0)
+
+    #创建词汇表
     vocabList = createVocablist(docList)
+    #分割Training Set 和Testing Set
     trainSet = list(range(50))
     testSet = []
     for i in range(10) :
@@ -30,8 +36,9 @@ def spamTest() :
     for docIndex in trainSet :
         trainMat.append(setOfWords2Vec(vocabList, docList[docIndex]))
         trainClass.append(classList[docIndex])
+    #Train出参数
     pSpam, p0v, p1v = trainNB0(array(trainMat), array(trainClass))
-    exit
+    #计算错误
     errorCount = 0
     for docIndex in testSet :
         wordVec = setOfWords2Vec(vocabList, docList)
