@@ -18,8 +18,27 @@ def spamTest() :
         docList.append(wordList)
         fullText.extend(wordList)
         classList.append(0)
-
     vocabList = createVocablist(docList)
+    trainSet = list(range(50))
+    testSet = []
+    for i in range(10) :
+        randIndex = int(random.uniform(len(trainSet)))
+        testSet.append(trainSet[randIndex])
+        del(trainSet[randIndex])
+    trainMat = []
+    trainClass = []
+    for docIndex in trainSet :
+        trainMat.append(setOfWords2Vec(vocabList, docList[docIndex]))
+        trainClass.append(classList[docIndex])
+    pSpam, p0v, p1v = trainNB0(array(trainMat), array(trainClass))
+    exit
+    errorCount = 0
+    for docIndex in testSet :
+        wordVec = setOfWords2Vec(vocabList, docList)
+        if(classifyNB(array(wordVec), p0v, p1v, pSpam) != classList[docIndex]) :
+            errorCount += 1
+
+    print(errorCount)
 
 
 #创建词汇列表, 将所有出现的单词整理起来
